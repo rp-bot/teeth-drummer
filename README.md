@@ -1,45 +1,48 @@
-# JUCE CMake Audio Plugin Template
+# Teeth Drummer MIDI instrument
 
-[![Build](https://img.shields.io/github/actions/workflow/status/anthonyalfimov/JUCE-CMake-Plugin-Template/Validation.yml?branch=main&logo=github)](https://github.com/anthonyalfimov/JUCE-CMake-Plugin-Template/actions)
+## Debug Builds
 
-A template for creating an audio plugin using [JUCE 6/7](https://github.com/juce-framework/JUCE) and [CMake](https://cmake.org).
+### Option 1
 
-- Works as a drop-in replacement for Projucer - no changes to the source code are necessary! The template can also be used alongside a `.jucer` project.
-- Generates clean Xcode and Visual Studio projects (reasonable source file organisation, only the necessary build schemes for Xcode).
-- Uses CMake to manage dependencies (e.g. JUCE). The template creates a shallow clone of the specified git tag or branch to reduce download times and disk usage.
-- Uses GitHub Actions to build and validate the plugin on MacOS and Windows. Dependencies and compiler output are cached for faster builds.
-
-To learn how to replace a Projucer project with this template, see the [**Migrating from Projucer**](MIGRATE_FROM_PROJUCER.md) guide.
-
-## Generating IDE project
-
-To generate an **Xcode** project, run:
 ```sh
-cmake -B Build -G Xcode -D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64 -D CMAKE_OSX_DEPLOYMENT_TARGET=10.13
+mkdir -p Build && cd Build
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+cmake --build . --config Debug
 ```
-The `-D CMAKE_OSX_ARCHITECTURES=arm64\;x86_64` flag is required to build universal binaries.
+### Option 2
 
-The `-D CMAKE_OSX_DEPLOYMENT_TARGET=10.13` flag sets the minimum MacOS version to be supported.
+1. Install the CMake Tools extension in VSCode
+2. Navigate to the CMake tab
+3. Open up the Project Outline
+4. Select your desired Target
+5. Right Click (or the "Compile" Icon) and Build / 
 
----
+## Release Builds
 
-To generate a **Visual Studio 2022 (17)** project, run:
+### Option 1
+
 ```sh
-cmake -B Build -G "Visual Studio 17"
+mkdir -p Build && cd Build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake --build . --config Release
 ```
+### Option 2
 
-## Building
+1. Install the CMake Tools extension in VSCode
+2. Navigate to the CMake tab
+3. In the project status dropdown, find the `configure` field.
+4. It should show `Debug`, click it and change it to `Release`.
+6. Click `refresh` button to update the configuration. 
+> But I recommend clicking `Delete Cache and Reconfigure`, Once you are moving towards a release, you don't want to keep any cache from the debug builds anyway.  
+7. Open up the Project Outline
+8. Select your desired Target
+9. Right Click (or the "Compile" Icon) and Build / 
 
-To build the generated IDE project from the command line, run:
+>(optional?) According to my tests, MacOS needs another step in order to make the VST work properly. 
+## Code Signing (MacOS)
+
 ```sh
-cmake --build Build --config Debug
+codesign --force --deep --sign - ~/Library/Audio/Plug-Ins/VST3/Teeth\ Drummer.vst3
+        # ^force replaces the temporary ad-hoc signature that CMake generates, If it exists. 
 ```
 
-## References
-
-Based on the [JUCE/examples/CMake/AudioPlugin](https://github.com/juce-framework/JUCE/tree/master/examples/CMake/AudioPlugin) template.
-
-Inspired by:
-
-- [sudara/pamplejuce](https://github.com/sudara/pamplejuce)
-- [eyalamirmusic/JUCECmakeRepoPrototype](https://github.com/eyalamirmusic/JUCECmakeRepoPrototype)
