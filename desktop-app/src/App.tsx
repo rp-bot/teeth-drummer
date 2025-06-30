@@ -1,50 +1,79 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
+import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+// Must match the Rust `UsbInfo` struct
+interface UsbInfo {
+  vid: number;
+  pid: number;
+  product?: string;
+  manufacturer?: string;
+  serial_number?: string; // Add the serial number here
+}
+// Must match the Rust `PortInfo` struct
+interface PortInfo {
+  port_name: string;
+  port_type?: UsbInfo;
+}
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+function App() {
+  const [ports, setPorts] = useState<PortInfo[]>([]);
+
+  const refreshPorts = async () => {
+    try {
+      const portList = await invoke<PortInfo[]>("get_serial_ports");
+      setPorts(portList);
+    } catch (e) {
+      console.error(e);
+      setPorts([]);
+    }
+  };
+
+  useEffect(() => {
+    refreshPorts();
+  }, []);
 
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
+    <div className="container">
+      <h1>Arduino MIDI Controller</h1>
+      <h2>Available Serial Ports</h2>
+      <button onClick={refreshPorts}>Refresh Ports</button>
 
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+      {ports.length > 0 ? (
+        <table>
+          <thead>
+            <tr>
+              <th>Port Name</th>
+              <th>Type</th>
+              <th>Vendor/Product</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ports.map((port) => (
+              <tr key={port.port_name}>
+                <td>{port.port_name}</td>
+                {port.port_type ? (
+                  <>
+                    <td>USB</td>
+                    <td>{`0x${port.port_type.vid.toString(16)} / 0x${port.port_type.pid.toString(16)}`}</td>
+                    <td>
+                      {port.port_type.product && <div>Product: {port.port_type.product}</div>}
+                      {port.port_type.manufacturer && <div>Mfg: {port.port_type.manufacturer}</div>}
+                      {port.port_type.serial_number && <div>S/N: {port.port_type.serial_number}</div>}
+                    </td>
+                  </>
+                ) : (
+                  <td colSpan={3}>Non-USB Port</td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No serial ports found. Is your Arduino connected?</p>
+      )}
+    </div>
   );
 }
 
