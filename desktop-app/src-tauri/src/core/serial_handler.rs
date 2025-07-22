@@ -43,7 +43,7 @@ pub fn start_serial_listener(app_handle: AppHandle, port_name: String) {
                                 let values: Vec<String> =
                                     line.split('\t').map(|s| s.to_string()).collect();
 
-                                println!("[Serial Thread] Parsed values: {:?}", values);
+                                // println!("[Serial Thread] Parsed values: {:?}", values);
 
                                 // Emit the vector of values in our payload
                                 app_handle.emit("serial-data", Payload { values }).unwrap();
