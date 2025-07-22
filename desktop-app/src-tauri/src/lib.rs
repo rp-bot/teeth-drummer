@@ -1,3 +1,5 @@
+// src-tauri/src/lib.rs
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 // Import our new module
 mod core;
