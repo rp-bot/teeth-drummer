@@ -1,9 +1,9 @@
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::{
     io::{self, BufRead, BufReader},
     thread,
-    time::Duration,
 };
-use tauri::{AppHandle, Emitter, Manager};
+use tauri::{AppHandle, Emitter};
 
 // UPDATE: The payload now contains a Vector of Strings
 #[derive(Clone, serde::Serialize)]
@@ -11,21 +11,27 @@ struct Payload {
     values: Vec<String>,
 }
 
-pub fn start_serial_listener(app_handle: AppHandle) {
+static STOP_FLAG: AtomicBool = AtomicBool::new(false);
+
+pub fn start_serial_listener(app_handle: AppHandle, port_name: String) {
+    STOP_FLAG.store(false, Ordering::SeqCst); // Reset stop flag
     thread::spawn(move || {
         println!("[Serial Thread] Started.");
 
-        let port_name = "/dev/ttyUSB0";
         let baud_rate = 9600;
 
-        match serialport::new(port_name, baud_rate).open() {
+        match serialport::new(&port_name, baud_rate).open() {
             Ok(port) => {
-                println!("[Serial Thread] Successfully opened port '{}'.", port_name);
+                println!("[Serial Thread] Successfully opened port '{}' .", port_name);
 
                 let mut reader = BufReader::new(port);
                 let mut line_buf = String::new();
 
                 loop {
+                    if STOP_FLAG.load(Ordering::SeqCst) {
+                        println!("[Serial Thread] Stop flag set. Exiting.");
+                        break;
+                    }
                     match reader.read_line(&mut line_buf) {
                         Ok(_) => {
                             let line = line_buf.trim_end(); // Get the line without the trailing newline
@@ -61,4 +67,8 @@ pub fn start_serial_listener(app_handle: AppHandle) {
             }
         }
     });
+}
+
+pub fn stop_serial_listener() {
+    STOP_FLAG.store(true, Ordering::SeqCst);
 }

@@ -10,7 +10,7 @@ pub struct UsbInfo {
     product: Option<String>,
     manufacturer: Option<String>,
     serial_number: Option<String>,
-  }
+}
 
 #[derive(Debug, Serialize, Clone)]
 pub struct PortInfo {
@@ -29,23 +29,23 @@ pub fn list_serial_ports() -> Vec<PortInfo> {
 
     let ports: Vec<PortInfo> = available_ports
         .into_iter()
-        .map(|port| {
-            let port_name = port.port_name.clone();
-
-            let port_type = match port.port_type {
-                SerialPortType::UsbPort(info) => Some(UsbInfo {
-                    vid: info.vid,
-                    pid: info.pid,
-                    product: info.product,
-                    manufacturer: info.manufacturer,
-                    serial_number: info.serial_number, // Extract the serial number 
-                }),
-                _ => None,
-            };
-
-            PortInfo {
-                port_name,
-                port_type,
+        .filter_map(|port| {
+            match port.port_type {
+                SerialPortType::UsbPort(info) => {
+                    let port_name = port.port_name.clone();
+                    let port_type = Some(UsbInfo {
+                        vid: info.vid,
+                        pid: info.pid,
+                        product: info.product,
+                        manufacturer: info.manufacturer,
+                        serial_number: info.serial_number,
+                    });
+                    Some(PortInfo {
+                        port_name,
+                        port_type,
+                    })
+                }
+                _ => None, // Filter out non-USB devices
             }
         })
         .collect();
