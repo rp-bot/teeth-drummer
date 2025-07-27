@@ -5,7 +5,7 @@ int fsrReading1;
 int fsrReading2;
 
 // The threshold below which we consider the reading to be noise.
-const int NOISE_THRESHOLD = 5; 
+const int NOISE_THRESHOLD = 10; 
 
 void setup() {
   Serial.begin(9600);   // Start serial communication
