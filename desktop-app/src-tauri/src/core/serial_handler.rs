@@ -108,10 +108,10 @@ fn midi_worker(rx: mpsc::Receiver<Vec<String>>) {
         let final_velocity2 = scaled_velocity2 as u8;
 
         // --- Your debug print will now be more informative ---
-        println!(
-            "[MIDI Thread] Raw: {}, {} -> Scaled: {}, {}",
-            velocity1_raw, velocity2_raw, final_velocity1, final_velocity2
-        );
+        // println!(
+        //     "[MIDI Thread] Raw: {}, {} -> Scaled: {}, {}",
+        //     velocity1_raw, velocity2_raw, final_velocity1, final_velocity2
+        // );
 
         // Now use the final, safe velocities to send the notes
         if let Err(e) = conn.send(&[0x90, MIDI_NOTE_C3, final_velocity1]) {
