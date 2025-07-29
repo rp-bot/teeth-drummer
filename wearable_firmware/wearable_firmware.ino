@@ -4,6 +4,9 @@ const int fsrPin2 = A1;  // Second FSR on A1
 int fsrReading1;
 int fsrReading2;
 
+// The threshold below which we consider the reading to be noise.
+const int NOISE_THRESHOLD = 10; 
+
 void setup() {
   Serial.begin(9600);   // Start serial communication
 }
@@ -11,6 +14,15 @@ void setup() {
 void loop() {
   fsrReading1 = analogRead(fsrPin1);  // Read from FSR1
   fsrReading2 = analogRead(fsrPin2);  // Read from FSR2
+
+  // If the reading is below our threshold, force it to zero.
+  if (fsrReading1 < NOISE_THRESHOLD) {
+    fsrReading1 = 0;
+  }
+  if (fsrReading2 < NOISE_THRESHOLD) {
+    fsrReading2 = 0;
+  }
+
 
   // Format for Serial Plotter: values separated by tabs or commas
   Serial.print(fsrReading1);

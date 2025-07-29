@@ -765,6 +765,7 @@ name = "desktop-app"
 version = "0.1.0"
 dependencies = [
  "midir",
+ "once_cell",
  "serde",
  "serde_json",
  "serialport",

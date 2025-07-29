@@ -1,6 +1,6 @@
 ### Project ###
 **/[Bb]uild*/
-/Libs/
+software-instrument/Libs/
 
 # Created by https://www.toptal.com/developers/gitignore/api/C++,CMake,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=C++,CMake,macos,windows
@@ -9,6 +9,7 @@
 # Prerequisites
 *.d
 
+.cache/
 # Compiled Object files
 *.slo
 *.lo
