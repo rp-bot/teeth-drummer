@@ -1,0 +1,109 @@
+# This project was generated with 0.3.24 using template: https://github.com/beeware/briefcase-template @ v0.3.24
+[tool.briefcase]
+project_name = "teeth drummer midi bridge"
+bundle = "com.example"
+version = "0.0.1"
+url = "https://example.com/teeth-drummer-bridge"
+license.file = "LICENSE"
+author = "rp-bot_ubuntu"
+author_email = "legacy.business18@gmail.com"
+
+[tool.briefcase.app.teeth-drummer-bridge]
+formal_name = "teeth drummer midi bridge"
+description = "My first application"
+long_description = """More details about the app should go here.
+"""
+sources = [
+    "src/teeth_drummer_bridge",
+]
+test_sources = [
+    "tests",
+]
+
+requires = [
+    "pyserial>=3.5",
+    "mido>=1.2.10", 
+    "python-rtmidi>=1.4.9",
+    "daemonize>=2.5.0",
+]
+test_requires = [
+    # Add your cross-platform test requirements here
+]
+
+[tool.briefcase.app.teeth-drummer-bridge.macOS]
+universal_build = true
+requires = [
+    # Add your macOS-specific app requirements here
+]
+
+[tool.briefcase.app.teeth-drummer-bridge.linux]
+requires = [
+    "pyserial>=3.5",
+    "mido>=1.2.10",
+    "python-rtmidi>=1.4.9",
+    "daemonize>=2.5.0",
+]
+
+[tool.briefcase.app.teeth-drummer-bridge.linux.system.debian]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.teeth-drummer-bridge.linux.system.rhel]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.teeth-drummer-bridge.linux.system.suse]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.teeth-drummer-bridge.linux.system.arch]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.teeth-drummer-bridge.linux.flatpak]
+flatpak_runtime = "org.freedesktop.Platform"
+flatpak_runtime_version = "24.08"
+flatpak_sdk = "org.freedesktop.Sdk"
+
+[tool.briefcase.app.teeth-drummer-bridge.windows]
+requires = [
+    # Add your Windows-specific app requirements here
+]
+
+# Mobile deployments
+[tool.briefcase.app.teeth-drummer-bridge.iOS]
+requires = [
+    # Add your iOS-specific app requirements here
+]
+
+[tool.briefcase.app.teeth-drummer-bridge.android]
+requires = [
+    # Add your Android-specific app requirements here
+]
+
+# Web deployments
+[tool.briefcase.app.teeth-drummer-bridge.web]
+requires = [
+    # Add your web-specific app requirements here
+]
+

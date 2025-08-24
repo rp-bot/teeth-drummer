@@ -1,0 +1,19 @@
+{
+  "midi_mapping": {
+    "note_on_channel": 1,
+    "note_off_channel": 1,
+    "velocity": 100,
+    "note_range": [60, 72],
+    "cc_channel": 1,
+    "cc_controller": 1
+  },
+  "serial": {
+    "baudrate": 115200,
+    "timeout": 1,
+    "encoding": "utf-8"
+  },
+  "midi": {
+    "port_name": "TeethDrummer",
+    "virtual": true
+  }
+}
